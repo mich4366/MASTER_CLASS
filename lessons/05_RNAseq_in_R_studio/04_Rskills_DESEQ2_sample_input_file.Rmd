@@ -25,13 +25,21 @@ load("results/count_files.RData", verbose = T)
 #IMPORTANT Raw counts file
 counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/good_class_RNAseq/pipeline_output/star_salmon/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
 
+counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/DATA/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+
+/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/05_RNAseq_in_R_studio
+
+/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/DATA
+
 # Remove gene name column
 counts_matrix <-counts_matrix %>% 
   select(-"gene_name") 
 View(counts_matrix)
 
 ```
-
+library(dplyr)
+library(tidyr)
+library(magrittr)
 
 # Let's use our counts table to make the colData for DESEQ2 
 We will make a dataframe that has sample_id, timepoint and replicate
@@ -122,7 +130,7 @@ deseq_samples$replicate <- factor(deseq_samples$replicate)
 # Nice let's save our work
 ```{r saving sample sheet}
 
-save(deseq_samples, counts_matrix, file = "results/deseq_samples.RData")
+gi
 
 ```
 # Note 

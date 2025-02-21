@@ -3,6 +3,8 @@ title: "02_installing_R_packages"
 author: "JR"
 date: "2024-03-17"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 # Here we are going to install our first packages !
@@ -52,7 +54,7 @@ However Bioconductor is not built directly into R - so we need to install an ins
 
 # Install BiocManager:
 In your R console (" > " prompt)
-```{r}
+```{r} - Three dots are code chunks 
 
 if (!require("BiocManager", quietly = TRUE))
     install.packages("BiocManager")

@@ -56,7 +56,7 @@ Note that the <- sets a variable.
 # Then we will call the read.table() function that first requires a file path to the counts in quotes
 # Note that in R functions follow with () where the parameter inputs are placed.
 # Then we will call up different parameters with a comma, in this case header = TRUE, row.names =1
-counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/good_class_RNAseq/pipeline_output/star_salmon/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/DATA/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
 
 # Nice, now we have an object called counts_matrix in our Environment Panel (top right)
 # Let's take a look 
