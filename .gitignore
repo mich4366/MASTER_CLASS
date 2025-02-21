@@ -9,6 +9,7 @@
 *.summary
 *.json
 *.sf
+*.sf
 .Rproj.user
 .Rhistory
 .RData
