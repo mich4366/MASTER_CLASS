@@ -49,6 +49,7 @@ filtered_res_df <- res_df %>%
 
 filtered_res_df_2 <- filtered_res_df %>%
   filter(padj < 0.05, abs(log2FoldChange) > 1)
+#The results could be duplicate genes and need to use the unique function to remove the duplicates 
 
 ```
 
@@ -166,6 +167,8 @@ as indexing and something we will do A LOT of :)
 
 # First we need to load our counts matrix
 counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/good_class_RNAseq/pipeline_output/star_salmon/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+
+counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/DATA/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
 
 # Let's make sure our counts file is the right format
 view(counts_matrix)

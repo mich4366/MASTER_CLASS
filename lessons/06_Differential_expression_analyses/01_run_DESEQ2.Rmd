@@ -64,6 +64,9 @@ dds <- DESeqDataSetFromMatrix(countData = counts_filtered,
 dds <- DESeqDataSetFromMatrix(countData = counts_filtered,
                               colData = deseq_samples,
                               design = ~ time_point)
+#This line is n
+#counts_filtered must all be numbers
+# colDATA contains the variables 
 ```
 
 # Now run DESeq function that does all the magic !
@@ -81,6 +84,7 @@ Important: to see which analyses DESEQ2 performed
 
 # resultsNames function retreives names of results
 resultsNames(dds)
+#Camel case syntax
 
 # Nice we see this output:
 # "Intercept" "time_point_12_vs_0" "time_point_24_vs_0" "time_point_48_vs_0" "time_point_96_vs_0"
@@ -103,6 +107,7 @@ low abundance genes inflating significant differential expression.
 This basically is rank counts normalized to std error in replicates.
 
 ```{r rlog }
+# Any big data sets will have low observations with low values
 rlog_counts <- rlog(dds, blind = TRUE)
 ```
 

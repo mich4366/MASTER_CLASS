@@ -23,6 +23,8 @@ library(ggplot2)
 #IMPORTANT Raw counts file
 counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/good_class_RNAseq/pipeline_output/star_salmon/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
 
+counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/DATA/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+
 ```
 
 # 1 IMPORTANT : CREATE Gene name to gene id conversion table.

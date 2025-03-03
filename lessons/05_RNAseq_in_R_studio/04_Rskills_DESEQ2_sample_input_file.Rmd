@@ -40,6 +40,7 @@ View(counts_matrix)
 library(dplyr)
 library(tidyr)
 library(magrittr)
+library(tibble)
 
 # Let's use our counts table to make the colData for DESEQ2 
 We will make a dataframe that has sample_id, timepoint and replicate
@@ -129,7 +130,7 @@ deseq_samples$replicate <- factor(deseq_samples$replicate)
 
 # Nice let's save our work
 ```{r saving sample sheet}
-
+save(deseq_samples, counts_matrix, file = "results/deseq_samples.RDATA")
 gi
 
 ```

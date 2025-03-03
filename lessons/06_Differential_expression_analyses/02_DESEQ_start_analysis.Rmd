@@ -60,6 +60,9 @@ But first let's get down to some fundamental analyses.
 
 res_0 <- results(mouse_long_dox_dds, contrast = c("time_point", "12", "0"))
 view(res_0)
+#c - paste function 
+#contrast function
+#Upper case shows meta data, lower case will show data frames 
 
 # IMPORTANT: "time_point" here is the factored column and would be different
 # if you called this column differently in your sample file (deseq_samples)
@@ -76,6 +79,8 @@ view(res_0)
 res_0_df <- data.frame(time = 12, res_0)
 view(res_0_df)
 
+#Making a data frame out of res_0
+
 # That is a bit better - as a dataframe
 # But out gene_id is still in the "meta" 
 # lets move it into a column with rownames_to_column
@@ -90,11 +95,15 @@ view(res_0_df)
 # counting NAs
 sum(is.na(res_0_df$padj))
 
+#If it is it will return a true value
+
 # How many genes in DF
 nrow(res_0_df)
 
 # what percentage
 sum(is.na(res_0_df$padj)) / nrow(res_0_df)
+
+#Sum 
 
 # Yikes half our genes have NA for padj - let's deal with that later 
 # In the meantime is.na is really important way to check your data 
@@ -107,6 +116,7 @@ sum(is.na(res_0_df$padj)) / nrow(res_0_df)
 We made a g2s and this is where it comes in handy !
 ```{r merge in gene_name}
 # we need to merge g2s and res_0_df with a column that exists in both DFs = gene_id
+# Order matters merging
 
 res_0_df <- merge(res_0_df, g2s, by = c("gene_id" = "gene_id"))
 view(res_0_df)
@@ -130,6 +140,8 @@ This is a good opportunity to learn some tidyverse with the pipe
 # note that %>% pushes data to next function (filter in this case)
 filtered_res_0_df <- res_0_df %>%
   filter(padj < 0.05)
+
+#Anything less than 0.05 is statistical significance as indicated by the equation above 
 
 nrow(filtered_res_0_df)
 # cool now we see 720 genes with padj < 0.05
