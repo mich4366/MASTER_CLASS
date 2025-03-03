@@ -41,6 +41,11 @@ https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/
 # reading in table TPM
 TPM <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/data/results/star_salmon/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
 
+TPM <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/DATA/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
+
+TPM <- TPM %>%
++     select(-gene_name)
+
 view(TPM)
 # Ok so we can see that we are missing our gene_names but have gene_id and a TPM value for each gene across each timepoint
 # NOTE: rownames are gene_id
@@ -53,7 +58,9 @@ view(TPM)
 # We are going to do this by indexing into TPM and grabbing all rows that add up to 0
 TPM_zero <- TPM[rowSums(TPM == 0) == ncol(TPM), ]
 view(TPM_zero)
+#Square brackets allow for function and go into row column space
 # Wow so almost half of the genes measured had no expression
+# We like check for 0s as many 0s or NAs can throw off statiscial analysis 
 
 # now let's remove these from our TPM table 
 # There are numerous ways to do this, here is one !
@@ -67,6 +74,7 @@ TPM_zero <- rownames_to_column(TPM_zero, "gene_id")
 
 # Now we can remove these from TPM using the Tidyverse %in% 'function'
 TPM_not_zero <- TPM[!(TPM$gene_id %in% TPM_zero$gene_id), ]
+#Removing zeros from the TPM file. in function is a left join, exclamation part to signify not to select gene_id
 view(TPM_not_zero)
 
 ```
@@ -81,7 +89,9 @@ were originally made.
 ```{r Distibution of TPM values }
 
 #first the distribution of TPM
-hist(TPM_not_zero$WT_0_R1, xlim = c(0,300), breaks = 1000)
+hist(TPM_not_zero$WT_0_1, xlim = c(0,300), breaks = 1000)
+
+mean(TPM_not_zero$WT_0_1)
 # weird we still see a lot of small values (e.g., 0.2314). let's filter our TPM object differently
 
 # First some cleaning up
@@ -109,13 +119,13 @@ any(rowSums(TPM) < 1)
 # Cool look like we are filtered to any row that adds up to at leat 1 tpm
 
 # Let's see if that histogram changed?
-hist(TPM_filtered$WT_0_R1, xlim = c(0,300), breaks = 1000)
+hist(TPM_filtered$WT_0_1, xlim = c(0,300), breaks = 1000)
 
 # Lets compare means 
-mean(TPM_filtered$WT_0_R1)
+mean(TPM_filtered$WT_0_1)
 
 # Now our non filtered mean
-mean(TPM_not_zero$WT_0_R1)
+mean(TPM_not_zero$WT_0_1)
 ```
 # Result: we see that in one sample the average is about 30-45 TPM
 That is for only one time point and replicate.
@@ -132,7 +142,8 @@ row_means <- rowMeans(TPM_filtered)
 # Look at the mean
 mean(row_means)
 # Cool so an average TPM value is about 45 across all samples
-# Not just the one we time point we looked at above.
+# Not just the one we time point we looked at above
+#Average abundance of genes across all time points.
 
 # What about the standard deviation?
 sd(row_means)
@@ -178,15 +189,21 @@ Let's use this as an opportunity to explore for loops more too :)
 
 # First establish time point and replicate cols
 time_points <- c("0", "12", "24", "48", "96")
-replicates <- c("_R1", "_R2", "_R3")
+replicates <- c("_1", "_2", "_3")
 
 X_average_values <- list()
 for (tp in time_points) {
   # Subset the columns for the current time point and replicates
-  cols <- grep(paste0("WT_", tp, "_R"), colnames(TPM_filtered))
+  cols <- grep(paste0("WT_", tp, "_"), colnames(TPM_filtered))
   
   # Calculate the mean of the replicates for each row
   avg <- rowMeans(TPM_filtered[, cols])
+  std_dev <- apply(TPM_filtered[, cols], 1 ,sd)
+   std_dev <- data.frame(std_dev)
+   
+   combined <- cbind(avg, std_dev)
+   
+    average_and_stddev_values <- c(average_and_stddev_values, list(combined))
   
   # Add the result to the list
   X_average_values <- c(X_average_values, list(avg))
@@ -233,7 +250,7 @@ average_and_stddev_values <- list()
 # now each object into the for loop is "tp"
 for (tp in time_points) {
   # Subset the columns for the current time point and replicates
-  cols <- grep(paste0("WT_", tp, "_R"), colnames(TPM_filtered))
+  cols <- grep(paste0("WT_", tp, "_"), colnames(TPM_filtered))
   
   # Calculate the mean and standard deviation of the replicates for each row
   avg <- rowMeans(TPM_filtered[, cols])
