@@ -1,5 +1,6 @@
 *00_run_pipeline*
 *.js
+STUDENTS*
 *.css
 *.bam
 *.bai
@@ -8,7 +9,6 @@
 *.gz*
 *.summary
 *.json
-*.sf
 *.sf
 .Rproj.user
 .Rhistory
@@ -63,3 +63,9 @@ work/*
 *.bed
 *.gz
 
+*.js
+*.css
+*.bam
+*.bai
+*star_salmon
+*.bigWig
