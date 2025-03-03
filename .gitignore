@@ -1,6 +1,6 @@
 *00_run_pipeline*
 *.js
-STUDENTS*
+*STUDENTS
 *.css
 *.bam
 *.bai
@@ -69,3 +69,4 @@ work/*
 *.bai
 *star_salmon
 *.bigWig
+
