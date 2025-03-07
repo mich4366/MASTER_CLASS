@@ -49,6 +49,7 @@ ggplot(filtered_res_df, aes(x = baseMean,
   xlim(0,1000) +
   geom_density_2d() 
 
+# Density maps, circles getting smaller and smaller indicates the peak of the data 
 # This now shows us where the density of our data is !
 
 # Now let's compare log2fc and lfcse
@@ -118,7 +119,8 @@ ggplot(filtered_res_df, aes(x = padj,
 
 # We just need to pick to variables and find the regression between them
 # To do this we use the function "lm" and assign values to it 
-
+# $ sign indexes into the two variables
+#lm will allow us to see if there is a linear relationship between variables
 lm_fit <- lm(filtered_res_df$padj ~ filtered_res_df$pvalue)
 
 # IMPORTANT: Summary and table are super handy functions in R

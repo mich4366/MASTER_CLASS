@@ -21,8 +21,12 @@ library(dplyr)
 # load TPM RESULTS: 
 load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/TPM_results/TPM_results.Rdata")
 
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/ResultsTPM_results.Rdata")
+
 # laod DESEQ2 results
 load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/counts_results_DESEQ/DESEQ_results.rdata")
+
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/ResultsDESEQ_results.rdata")
 ```
 
 # Summary of where we are at
@@ -52,6 +56,8 @@ genes <- c("Gm13698", "Gm13691", "Gm9045", "Pgk1-rs7", "Firre", "Neurod1")
 gene_values <- filtered_res_df %>%
   filter(gene_name %in% genes)
 
+#gene_values can show that genes were signficant more than once
+
 # Now the plotting beings
 ggplot(gene_values, 
        aes(x = log2FoldChange, y = padj )) +
@@ -78,6 +84,7 @@ ggplot(gene_values,
   facet_wrap(gene_name ~ result_name) + 
   geom_point()
 
+#facet name make a plot for each gene name and result
 # Nice that worked and now we have a single data point in each plot :)
 # This maybe a good example for facet grid:
 
@@ -103,12 +110,14 @@ ggplot(gene_values,
   facet_wrap(gene_name ~ ., nrow = 2, ncol = 3) + 
   geom_point()
 
+?facet_wrap
 # Note the axis are all the same for each plot -- let's use 'scales = free' parameter
 ggplot(gene_values, 
        aes(x = log2FoldChange, y = padj )) +
   facet_wrap(gene_name ~ ., nrow = 2, ncol = 3, scales = "free") + 
   geom_point()
   
+# scales = free will make it so that each box has its own scale 
 # Nice now every plot is scaled according to data in the plot !
 ```
 

@@ -37,8 +37,12 @@ So take all of this with a grain of salt but is good to measure relative changes
 # load TPM RESULTS: 
 load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/TPM_results/TPM_results.Rdata")
 
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/ResultsTPM_results.Rdata")
+
 # laod DESEQ2 results
 load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/counts_results_DESEQ/DESEQ_results.rdata")
+
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/ResultsDESEQ_results.rdata")
 
 ```
 
@@ -46,7 +50,7 @@ load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_
 ```{r hist TPM values}
 # Previously we plotted TPM distribution from our cols labeled:
 # "WT_0_1" etc - note that is not a good idea to name a col by a number :)
-hist(average_and_stddev_values$96_avg)
+hist(average_and_stddev_values$"96"_avg)
 # Oh no this doesn't work because of an "integer" value being indexed
 # This can be fixed easily by :
 hist(average_and_stddev_values$'96_avg', xlim = c(0,1000), ylim = c(0,1000), breaks = 1000)
@@ -64,6 +68,8 @@ time_values <- c("0_avg", "12_avg", "24_avg", "48_avg", "96_avg")
 time_points <- names(average_and_stddev_values)[grep("avg", names(average_and_stddev_values))]
 # moving rows into df so we can track gene_id
 average_and_stddev_values_2 <- rownames_to_column(average_and_stddev_values, var = "gene_id")
+
+#Move the meta (geneID) information to the columns and then replace with geneID column
 
 # Melt the data frame to long format
 melt_tpm_df <- melt(average_and_stddev_values_2, measure.vars = time_points, value_name = "gene_id")

@@ -51,8 +51,12 @@ Layer 1 : DATA (data types matter so good to label object accrodingly)
 # load TPM RESULTS: 
 load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/TPM_results/TPM_results.Rdata")
 
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/ResultsTPM_results.Rdata")
+
 # laod DESEQ2 results
 load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/counts_results_DESEQ/DESEQ_results.rdata")
+
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/ResultsDESEQ_results.rdata")
 
 ```
 
@@ -183,6 +187,7 @@ DENISTY Plots are also very useful to see where the density of data arises.
 ggplot(filtered_res_df, aes(x = log2FoldChange , fill = result_name)) +
    geom_density()
 
+# Denisty area under the curve is 100% of the data 
 # but again its hard to see let's fix that with shading or alpha in
 # geom layer
 
