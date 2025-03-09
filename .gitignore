@@ -70,3 +70,4 @@ work/*
 *star_salmon
 *.bigWig
 *01_Mouse_dox_wt
+*05_RNAseq_in_R_studio
