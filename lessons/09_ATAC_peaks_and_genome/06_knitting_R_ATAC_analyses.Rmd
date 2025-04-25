@@ -338,3 +338,7 @@ Now your ready to start using all you have learned on even more data (same sampl
 
 # Congratulations and now level up to final lv 10 !
 
+# Do the 37 genes in humans and mouse affected by dox go in the same direction.
+#What are the 37 genes 
+# What are the genes conserved between human and mouse
+

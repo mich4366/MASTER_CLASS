@@ -31,9 +31,9 @@ and (iii) ALL the data we need to start making figures - our next section :)
 # Goal: script our RNAseq analysis pipeline to find genes changing significant across time from dox exposure. 
 
 # Importing counts and TPM values
-```{r import counts and TPM from Salmon}
+```{r import counts Salmon}
 # laoding Salmon counts from NF_CORE run 3.14
-counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/good_class_RNAseq/pipeline_output/star_salmon/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+
 
 counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/DATA/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
 
@@ -143,17 +143,17 @@ save(unique_sig_genes, counts_integer, g2s, res_df, filtered_res_df, deseq_sampl
 
 
 
-load("results/counts_results_DESEQ/DESEQ_results.rdata")
+#load("results/counts_results_DESEQ/DESEQ_results.rdata")
 ```
 
 # As a final step let's archive the average and standard deviation of our TPM values
 After this last step we will have all the info we need for plotting in lv 7 !
 
 # Import TPM file from Salmon
-```{r import counts and TPM from Salmon}
+```{r import TPM from Salmon}
 # laoding and preparing TPM file from Salmon
 
-TPM <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/data/results/star_salmon/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
+
 
 TPM <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/DATA/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
 

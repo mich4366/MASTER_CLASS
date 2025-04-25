@@ -65,6 +65,8 @@ is a peice of the genome that is accessible or open (to Tn5 transposon) !
 
 ir1 <- IRanges(start = c(1,200, 1000), end = c(30, 299, 1200))
 
+#Parametr for Inranges is start and stop 
+
 # take a look
 ir1
 

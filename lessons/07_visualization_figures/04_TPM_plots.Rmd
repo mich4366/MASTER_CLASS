@@ -78,6 +78,7 @@ melt_tpm_df <- melt(average_and_stddev_values_2, measure.vars = time_points, val
 # Note the same can be done with pivot longer
 pivot_longer_tpm_df <- average_and_stddev_values_2 %>% 
   pivot_longer(cols = all_of(time_points), names_to = 'Time', values_to = 'TPM')
+#pivot longer will lead to more plots from facet wrap 
 
 # Now to plot:
 ggplot(melt_tpm_df, aes(x = value)) +
@@ -112,6 +113,8 @@ names(sig_genes) <- "gene_id"
 
 # one way to subset the data frame of avrg / sd TPM values
 sig_gene_tpm <- inner_join(average_and_stddev_values_2, sig_genes, by = "gene_id")
+
+# merging bigger list into the smaller list 
 
 # Same can be done by indexing
 sig_gene_tpm_2 <- average_and_stddev_values_2[average_and_stddev_values_2$gene_id %in%
@@ -170,7 +173,7 @@ plot_df <- data.frame(
   avg = unlist(Gm9045_tpm[avg_cols]),
   sd = unlist(Gm9045_tpm[sd_cols])
 )
-
+#gsub substitutes with whatever is in the middle column
 # NOW THE PLOT !
 ggplot(plot_df, aes(x = time, y = avg)) +
   geom_line() +
@@ -178,6 +181,8 @@ ggplot(plot_df, aes(x = time, y = avg)) +
   theme("paperwhite") +
   labs(x = "Time (hours)", y = "TPM Value")
 # +   theme_classic()
+
+# + and - will make the error bars symmetric 
 
 ```
 
@@ -226,6 +231,8 @@ df_plot_genes$Time <- as.numeric(df_plot_genes$Time)
 df_plot_genes <- df_plot_genes %>% 
   group_by(gene_id, Time) %>% 
   summarise(mean_TPM = mean(TPM), sd_TPM = sd(TPM))
+
+#You are able to group by gene_id and Time and this allows you to make new columns of mean_TPM and sd_TPM because the group columns are in the program's memory
 
 # (5) Plot the line plot with error bars
 ggplot(df_plot_genes, aes(x = Time, y = mean_TPM)) +
@@ -379,6 +386,7 @@ LFCplot <- function(genes_of_interest, res_df) {
   library(dplyr)
   library(ggplot2)
   
+  #res_df is DESEQ2 output 
   # Reduce DESEQ2 results to genes of interest
   df_lfc_plot <- res_df[res_df$gene_id %in% genes_of_interest$gene, ]
   

@@ -9,6 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+# /scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run
+
+# bwa , merged_library , macs2, broad_peak, consensus
+
 # GOAL to explore the output files from the ATACseq pipeline !
 Congratulations, if you are here it means you have completed your 
 ATACseq pipeline run !

@@ -38,8 +38,12 @@ First let's load the data
 # load TPM RESULTS: 
 load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/TPM_results/TPM_results.Rdata")
 
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/ResultsTPM_results.Rdata")
+
 # laod DESEQ2 results
 load("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/counts_results_DESEQ/DESEQ_results.rdata")
+
+load("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/ResultsDESEQ_results.rdata")
 
 ```
 
@@ -55,6 +59,8 @@ TPM data as these are the values typically used for clustering and heatmaps.
 # This helps deflate spurious and low values - common practice for clustering/heatmaps
 log_tpm_matrix <- log2(TPM_filtered + 1)
 
+log_brain_gene_replicates_TPM <- log2(brain_gene_replicates_no_id+1)
+
 # Now let's calculate how closely related each sample (time point) is to each other using DIST function.
 # We make a vector the length of genes in TPM_filtered. Then use correlation (DIST function) to find similarity.
 # For other methods check out dist menu 
@@ -62,6 +68,8 @@ log_tpm_matrix <- log2(TPM_filtered + 1)
 
 # Let's start with euclidean distance / similarity based on log2 TPM values of genes in TPM_filtered.
 distance_matrix <- dist(t(log_tpm_matrix), method = "euclidean")
+
+#t function will convert columns into rows 
 
 # Now we use the function : HCLUST ! 
 # This performs the hierarchical clustering of each samples relationship
@@ -120,6 +128,8 @@ pheatmap(log_tpm_matrix,
          show_rownames = FALSE, # Hide gene names for clarity
          show_colnames = TRUE,  # Show sample names
          main = "Heatmap of Log2-Transformed TPM Values for Sig genes")
+
+# This will show how similar the genes are 
 
 # Notice we just said cluster in the pheatmap commands above
 # We can also change them based on what is available in pheatmap
@@ -216,6 +226,8 @@ First, we need to load in our DDS from 0
 ```{r load dds for mouse long time course DESEQ2}
 # Loading DDS
 load("../06_Differential_expression_analyses/results/dds_time_point_mouse_long.RData", verbose = TRUE)
+
+
 
 # First Normalize counts (rlog) function in DESEQ2
 # This basically is rank counts normalized to std error in replicates.

@@ -25,8 +25,8 @@ source("../../util/00_our_first_function_lesson.R")
 
 # establishing peak path to the dir with MACS2 output peak files from NF_CORE ATACseq pipeline
 
-peak_path <- "<your_atac_pipeline_output_dir>/bwa/merged_library/macs2/broad_peak"
-# peak_path <- "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak"
+
+peak_path <- "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak"
 
 # creating a file list also needed for import_peaks function to get sample name associated with file
 fl <- list.files(peak_path, full.names = TRUE, pattern = ".broadPeak")
@@ -120,8 +120,8 @@ common_peaks@elementMetadata@listData[["name"]]
 ```{r (c) code to test function}
 
 # peak file "consensus_path" parameter of import_peaks function
-peak_path <- "<your_atac_pipeline_output_dir>/bwa/merged_library/macs2/broad_peak"
-# peak_path <- "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak"
+#peak_path <- "<your_atac_pipeline_output_dir>/bwa/merged_library/macs2/broad_peak"
+ peak_path <- "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak"
 
 # source function
 source("../../util/00_our_first_function_lesson.R")
@@ -146,11 +146,15 @@ Let's make a handy script to make peak objects in environment into viewable file
 
 ```{r exporting common_peaks GRanges to .bed file for viewing in IGV}
 
+dir.create("results", showWarnings = FALSE, recursive = TRUE)
+
 # setting export file path
 output_bed <- "results/common_peaks.bed"
 
 # Export the GRanges object to a BED file
 rtracklayer::export(common_peaks, con = output_bed, format = "BED")
+
+# BED file needs a start and stop file 
 
 # That's it now we can visualize the common_peaks you just created!
 ```

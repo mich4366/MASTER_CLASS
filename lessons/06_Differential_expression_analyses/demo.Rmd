@@ -22,6 +22,11 @@ library(textshape)
 library(Rcpp)
 library(DESeq2)
 library(matrixStats)
+library(biomaRt)
+library(org.Mm.eg.db)
+library(tinytex)
+BiocManager::install("biomaRt") 
+BiocManager::install("org.Mm.eg.db")
 ```
 
 So far, we have done a lot of fundamental RNA sequencing analysis - great work!
@@ -35,6 +40,10 @@ and (iii) ALL the data we need to start making figures - our next section :)
 ```{r import counts and TPM from Salmon}
 # laoding Salmon counts from NF_CORE run 3.14
 counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/good_class_RNAseq/pipeline_output/star_salmon/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+
+counts_matrix <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/tess/MASTER_CLASS/data/salmon.merged.gene_counts.tsv", header=TRUE, row.names=1)
+
+
 
 # preparing counts for DESEQ
 # create g2s
@@ -123,6 +132,9 @@ filtered_res_df <- res_df %>%
   filter(padj < 0.05, abs(log2FoldChange) > 1)
 
 unique_sig_genes <- unique(filtered_res_df$gene_id)
+
+unique_sig_genes <- unique(filtered_res_df$gene_id)
+unique_sig_genes_df <- data.frame(gene_id = unique_sig_genes)
 ```
 
 # Nice only 100 lines of code to go from counts table to DESEQ results !
@@ -137,7 +149,10 @@ in our results directory :) called 'count_results_DESEQ'
 
 # save(unique_sig_genes, counts_integer, g2s, res_df, filtered_res_df, deseq_samples, file = "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/counts_results_DESEQ/DESEQ_results.rdata")
 
+save(unique_sig_genes, counts_integer, g2s, res_df, filtered_res_df, deseq_samples, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/My_Project/results/DESEQ_results.rdata")
+
 # load("results/counts_results_DESEQ/DESEQ_results.rdata")
+# load ("My_Project/results/DESEQ_results.rdata")
 ```
 
 # As a final step let's archive the average and standard deviation of our TPM values
@@ -148,6 +163,11 @@ After this last step we will have all the info we need for plotting in lv 7 !
 # laoding and preparing TPM file from Salmon
 
 TPM <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/04_RNAseq_Dox/01_Mouse_dox_wt/data/results/star_salmon/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
+
+TPM <- read.table("/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/tess/MASTER_CLASS/data/salmon.merged.gene_tpm.tsv", header=TRUE, row.names=1)
+
+TPM <- TPM %>%
+     select(-gene_name)
 
 # Filtering for TPM of at least 1 across samples.
 TPM_filtered <- TPM[rowSums(TPM) > 1, ]
@@ -164,13 +184,13 @@ any(rowSums(TPM) < 1)
 
 # Time and replicate values
 time_points <- c("0", "12", "24", "48", "96")
-replicates <- c("_R1", "_R2", "_R3")
+replicates <- c("_1", "_2", "_3")
 
 # initialize list for results
 average_and_stddev_values <- list()
 # now each object into the for loop is "tp"
 for (tp in time_points) {
-  cols <- grep(paste0("WT_", tp, "_R"), colnames(TPM_filtered))
+  cols <- grep(paste0("WT_", tp, "_"), colnames(TPM_filtered))
   avg <- rowMeans(TPM_filtered[, cols])
   std_dev <- apply(TPM_filtered[, cols], 1, sd)
   std_dev <- data.frame(std_dev)
@@ -190,8 +210,55 @@ colnames(average_and_stddev_values) <- paste0(rep(time_points, each = 2), c("_av
 # we just want to open up TPM data we still have G2s and Samplesheet.
 # save(TPM, average_and_stddev_values, TPM_filtered, g2s, deseq_samples, file = "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/06_Differential_expression_analyses/results/TPM_results/TPM_results.Rdata" )
 
+save(TPM, average_and_stddev_values, TPM_filtered, g2s, deseq_samples, file = "/scratch/Shares/rinnclass/MASTER_CLASS/STUDENTS/Mich4366/MASTER_CLASS/lessons/06_Differential_expression_analyses/My_Project/results/TPM_results.Rdata" )
+
 # test
 # load("results/TPM_results/TPM_results.Rdata")
+# load ("My_Project/results/TPM_results.Rdata")
+
+
+#Pulling out the genes of the brain from the data set 
+
+#You can use biomaRt to fetch annotations for your Ensembl gene IDs. Here is how you can set it up:
+
+# Set up a connection to the Ensembl database for Mus musculus (mouse)
+ensembl = useMart("ensembl", dataset = "mmusculus_gene_ensembl") # big list of genes with descriptions
+
+# Retrieve gene annotations using Ensembl gene IDs
+gene_data <- getBM(attributes = c("ensembl_gene_id", "external_gene_name", "gene_biotype", "description"),mart = ensembl)
+
+# Example list of brain-related keywords
+brain_keywords <- c( #key words for finding which genes have to do with the brain
+  "brain", "neuron", "cortex", "hippocampus",
+  "amygdala", "thalamus", "hypothalamus", "cerebellum", "brainstem",
+  "medulla", "pons", "midbrain", "frontal lobe", "parietal lobe",
+  "temporal lobe", "occipital lobe", "white matter", "gray matter",
+  "synapse", "axon", "dendrite", "glia", "astrocyte", "microglia",
+  "oligodendrocyte", "myelin", "neurotransmitter", "dopamine",
+  "serotonin", "GABA", "acetylcholine", "neuroplasticity",
+  "neurogenesis", "electrophysiology", "fMRI", "EEG", "BOLD signal",
+  "action potential", "resting potential", "ion channel"
+)
+
+# Filter the data for brain-related genes
+brain_genes <- gene_data[grep(paste(brain_keywords, collapse = "|"), gene_data$description, ignore.case = TRUE), ] # list of brain genes with description
+
+#Assuming you have a dataset (my_data) with Ensembl gene IDs in the "meta" form, you can merge this with your filtered brain_genes dataset:
+
+#Remove ensembl portion of the gene id 
+colnames(brain_genes) <- gsub("external_","",colnames(brain_genes)) # fixing a column name
+colnames(brain_genes) <- gsub("ensembl_","",colnames(brain_genes))
+
+filtered_res_df$gene_id <- gsub("\\..*", "", filtered_res_df$gene_id)
+rownames(TPM_filtered) <- gsub("\\..*", "", rownames(TPM_filtered))
+
+brain_genes_descriptions <- merge(brain_genes,filtered_res_df, by = "gene_name")
+merged_with_replicates <- cbind(gene_id = rownames(TPM_filtered), TPM_filtered) # putting gene id as one of the columns
+
+colnames(brain_genes_descriptions) <- gsub(".x","",colnames(brain_genes_descriptions)) # fixing a column name
+brain_gene_replicates <- merge(brain_genes_descriptions, merged_with_replicates, by = "gene_id")
+brain_gene_replicates <- brain_gene_replicates[,-c(2:12)]
+
 ```
 # VERY NICE we have all our results organized and can start to make figures
 # WE ARE READY FOR LEVEL 7 - Congrats on finishing Level 6 !!
@@ -223,6 +290,7 @@ sig_gene_tpm <- merge(sig_gene_tpm, g2s)
 # Now we should organize so we can plot specific genes (not mix character and integer)
 sig_gene_tpm <- sig_gene_tpm %>%
   select(-gene_id) 
+
 
 # cool now we have the tpm and sd values to plot !
 ```
@@ -256,6 +324,9 @@ df_plot_genes <- rownames_to_column(df_plot_genes, var = "gene_id")
 df_plot_genes <- df_plot_genes %>% 
   pivot_longer(cols = -gene_id, names_to = 'Time_Replicate', values_to = 'TPM')
 
+ brain_gene_replicates_turned <- brain_gene_replicates %>% 
+     pivot_longer(cols = -gene_id, names_to = 'Time_Replicate', values_to = 'TPM')
+
 # Seperating sample name into time and replicate for plotting table
 df_plot_genes <- df_plot_genes %>%
   separate(
@@ -266,13 +337,29 @@ df_plot_genes <- df_plot_genes %>%
   ) %>%
   select(-WT)
 
+
+ brain_gene_replicates_turned <- brain_gene_replicates_turned %>%
+     separate(
+         Time_Replicate,
+       into = c('WT', 'Time', 'Replicate'),
+         sep = '_',
+        extra = "merge"
+    ) %>%
+   dplyr::select(-WT)
+
 # Convert Time to numeric values
 df_plot_genes$Time <- as.numeric(df_plot_genes$Time)
+
+brain_gene_replicates_turned$Time <- as.numeric(brain_gene_replicates_turned$Time)
 
 # (4) Group by Time and calculate mean and std of TPM
 df_plot_genes <- df_plot_genes %>% 
   group_by(gene_id, Time) %>% 
   summarise(mean_TPM = mean(TPM), sd_TPM = sd(TPM))
+
+ brain_gene_replicates_turned <- brain_gene_replicates_turned%>% 
+    group_by(gene_id, Time) %>% 
+    summarise(mean_TPM = mean(TPM), sd_TPM = sd(TPM))
 
 # (5) Plot the line plot with error bars
 ggplot(df_plot_genes, aes(x = Time, y = mean_TPM)) +
@@ -281,6 +368,77 @@ ggplot(df_plot_genes, aes(x = Time, y = mean_TPM)) +
   labs(x = 'Time (hours)', y = 'Average TPM') +
   ggtitle('Average TPM across Time Points') +
   facet_wrap(~ gene_id)
+
+ggplot(brain_gene_replicates_turned, aes(x = Time, y = mean_TPM)) +
+  geom_line() +
+  geom_errorbar(aes(ymin = mean_TPM - sd_TPM, ymax = mean_TPM + sd_TPM), width = 0.2) +
+  labs(x = 'Time (hours)', y = 'Average TPM') +
+  ggtitle('Average TPM across Time Points') +
+  facet_wrap(~ gene_id)
+
+brain_gene_replicates_no_id <- brain_gene_replicates
+ rownames(brain_gene_replicates_no_id) <- make.unique(as.character(brain_gene_replicates_no_id$gene_id))
+ brain_gene_replicates_no_id$gene_id <- NULL  # remove the column
+
+log_tpm_matrix <- log2(TPM_filtered + 1)
+
+log_brain_gene_replicates_TPM <- log2(brain_gene_replicates_no_id+1)
+
+ distance_matrix <- dist(t(log_brain_gene_replicates_TPM), method = "euclidean")
+ hc_complete <- hclust(distance_matrix, method = "complete")
+ plot(hc_complete, labels = colnames(log_brain_gene_replicates_TPM), main = "Global TPM Filtered Dendrogram ", sub = "sample relationship by time and replicate after dox treatment")
+
+clusters <- cutree(hc_complete, k = 5)
+
+print(clusters)
+
+dend_hc_complete <- as.dendrogram(hc_complete)
+
+
+view(dend_hc_complete)
+
+# Reorder the dendrogram based on the clusters created above
+dend_hc_complete <- reorder(dend_hc_complete, clusters)
+
+# Plot the reordered dendrogram
+plot(dend_hc_complete, main = "Global TPM Filtered Dendrogram (Ordered by Cluster)", sub = "Sample relationship by time and replicate after dox treatment")
+
+pheatmap(log_brain_gene_replicates_TPM, 
+         cluster_rows = TRUE,  # Cluster genes (rows)
+         cluster_cols = TRUE,  # Cluster samples (columns)
+        scale = "row",        # Scale the data across rows (genes) for better visualization
+          show_rownames = FALSE, # Hide gene names for clarity
+          show_colnames = TRUE,  # Show sample names
+          main = "Heatmap of Log2-Transformed TPM Values for Sig Brain Genes")
+
+
+custom_dist <- function(x) dist(x, method = "manhattan") # Replace "manhattan" with your preferred method
+custom_hclust <- function(x) hclust(x, method = "ward.D2") # Replace "ward.D2" with your preferred clustering method
+
+# Create a heatmap with custom distance and clustering functions
+pheatmap(log_tpm_matrix, 
+         cluster_rows = TRUE,  
+         cluster_cols = TRUE,  
+         scale = "row",        
+         show_rownames = FALSE, 
+         show_colnames = TRUE,  
+         main = "Heatmap of Log2-Transformed TPM Values",
+         color = colorRampPalette(c("blue", "white", "red"))(50),
+         distfun = custom_dist,   
+         hclustfun = custom_hclust 
+)
+
+
+#ler3 IGV no significant data 
+#nsmf  IGV no significant
+#dab2 IGV no significant 
+#mal no significant
+#Crmp1 no significant
+#Slc6a13 no significant 
+#Trpc6
+# Myrf significant data seen 
+# Htr5a
+# Nnat some data seen
 
 # This could be cleaned up by using gene_name instead -- fun exeRcise :)
 ```
@@ -313,3 +471,6 @@ pheatmap(sig_rlog_counts_matrix_mouse_long,
          breaks = breaks,
          color = colorRampPalette(c("blue", "white", "red"))(50) # Gradient from blue to red
          )
+
+
+

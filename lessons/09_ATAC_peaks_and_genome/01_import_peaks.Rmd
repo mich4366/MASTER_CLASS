@@ -28,10 +28,15 @@ To do this we need rtarcklayer to import peak files as GRanges so we can find ov
 
 WT_0_Peaks <- rtracklayer::import("../08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak/ESC_WT_control_0_REP1.mLb.clN_peaks.broadPeak")
 
+#/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline
+#/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak
+
 # let's take a look at the data 
 view(WT_0_Peaks)
 
 # Now KO no dox (0 timepoint)
+KO_0_Peaks <- rtracklayer::import("/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak/ESC_KO_control_0_REP1.mLb.clN_peaks.broadPeak")
+
 KO_0_Peaks <- rtracklayer::import("../08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak/ESC_KO_control_0_REP1.mLb.clN_peaks.broadPeak")
 
 # Let's take a look at what information we have !
@@ -61,6 +66,8 @@ seqnames(KO_0_Peaks)
 # Let's use grep to grab the enteries that start with "chr" indicated by "^chr"
 KO_0_chr_peaks <- KO_0_Peaks[grepl("^chr", as.character(seqnames(KO_0_Peaks)))]
 WT_0_chr_peaks <- WT_0_Peaks[grepl("^chr", as.character(seqnames(WT_0_Peaks)))]
+
+view(KO_0_chr_peaks)
 
 # Let's take a look:
 seqnames(KO_0_chr_peaks)

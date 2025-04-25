@@ -104,6 +104,8 @@ table(gencode_gr@elementMetadata$gene_name) %>%
 # Typical gene symbols 
 table(gencode_gr@elementMetadata$transcript_name) %>%
   head()
+table(gencode_gr@elementMetadata@rownames) %>%
+  head()
 
 # transcript_id
 

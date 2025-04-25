@@ -32,8 +32,8 @@ We are basically starting where we left off last lesson!
 ```{r create my_peaks GRange List using import_peaks custom function}
 
 # peak file "consensus_path" parameter of import_peaks function
-peak_path <- "<your_atac_pipeline_output_dir>/bwa/merged_library/macs2/broad_peak"
-#peak_path <- "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak"
+#peak_path <- "<your_atac_pipeline_output_dir>/bwa/merged_library/macs2/broad_peak"
+peak_path <- "/scratch/Shares/rinnclass/MASTER_CLASS/lessons/08_ATACseq_pipeline/00_run_pipeline/00_pipeline_run/pipeline_run/bwa/merged_library/macs2/broad_peak"
 
 # make file list (fl)
 fl <- list.files(peak_path, full.names = TRUE, pattern = ".broadPeak")
@@ -91,6 +91,8 @@ Let's make a promoter window around each of the gene types we just loaded !
 # mrna_promoters
 mrna_promoters <- promoters(mrna_genes, upstream = 2000, downstream = 2000)
 
+
+
 # gene_promoters
 gene_promoters <- promoters(gencode_genes_mouse, upstream = 2000, downstream = 2000)
 
@@ -136,6 +138,7 @@ length(mrna_atac_ov@from)
 # NOTE not exactly the same which is strange .... 61.2% vs 62.6% 
 # That is way more than lincRNA. This raises quesiton of which ones were expresses?
 # We will get to that later.
+
 
 # percentage of common peaks with promoter overlaps 
 (21859 + 1073) / (37152)
